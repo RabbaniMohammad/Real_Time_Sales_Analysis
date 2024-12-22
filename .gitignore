@@ -1,0 +1,42 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment directory
+env/
+
+# Checkpoints (for intermediate file storage or outputs)
+checkpoints/
+
+# IDE or editor-specific files
+.vscode/
+.idea/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Java JAR files
+*.jar
+
+# Target and compiled files
+target/
+
+# Files related to data processing
+last_processed.txt
+
+# Output or intermediate data
+New Text Document.txt
+
+# Templates for Flask (can be included if dynamically generated)
+templates/*.html
+
+# Requirements file (keep unless dynamically generated)
+# Uncomment if generated dynamically
+# requirements.txt

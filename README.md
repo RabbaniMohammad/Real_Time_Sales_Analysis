@@ -81,16 +81,20 @@ Usage Instructions
 Running the Project Locally
 
 <h3>Clone the Repository:</h3>
-git clone <repository_url>
-cd Real-Time-Sales-Analysis
-Build and Start Docker Containers:
-docker-compose up --build
-Install Python Dependencies:
-pip install -r requirements.txt
-Run Flask for Data Entry:
-python main.py
-Run Streamlit for Visualization:
-streamlit run batch_streamlit.py
+<p>git clone <repository_url></p>
+<p>cd Real-Time-Sales-Analysis</p>
+  
+<h3>Build and Start Docker Containers:</h3>
+<p>docker-compose up --build</p>
+
+<h3>Install Python Dependencies:</h3>
+<p>pip install -r requirements.txt</p>
+
+<h3>Run Flask for Data Entry:</h3>
+<p>python main.py</p>
+
+<h3>Run Streamlit for Visualization:</h3>
+<p>streamlit run batch_streamlit.py</p>
 
 <h3>Future Enhancements</h3>
 Integration with cloud storage for scalability.

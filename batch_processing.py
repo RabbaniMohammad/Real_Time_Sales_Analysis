@@ -30,6 +30,7 @@ LAST_PROCESSED_FILE = "last_processed.txt"
 
 KAFKA_TOPIC = "sentiment_data"
 KAFKA_SERVER = "localhost:9092"
+MAIN_RECORDS = None
 
 producer = KafkaProducer(bootstrap_servers=KAFKA_SERVER, value_serializer=lambda v: json.dumps(v).encode("utf-8"))
 
@@ -43,7 +44,8 @@ spark = SparkSession.builder \
 
 
 def connectDB():
-    # CDC
+    global MAIN_RECORDS
+    # CDC take cares of updation, deletion and insertion
     last_processed = "1970-01-01 00:00:00"
     if os.path.exists(LAST_PROCESSED_FILE):
         with open(LAST_PROCESSED_FILE, "r") as file:
@@ -63,6 +65,7 @@ def connectDB():
             cursor.execute(query)
             columns = [desc[0] for desc in cursor.description]
             records = cursor.fetchall()
+            MAIN_RECORDS = records
         df = pd.DataFrame(records, columns=columns)
         if not df.empty:
             last_processed = str(df["timestamp"].max())
@@ -124,20 +127,31 @@ def pushToDB(spark_df):
     conn = psycopg2.connect(**DB_CONFIG)
     cursor = conn.cursor()
 
+    print("These are the main records", MAIN_RECORDS)
+
     insert_query = """
-    INSERT INTO sales_data (state, branch, product_name, text, sentiment_result)
-    VALUES (%s, %s, %s, %s, %s);
+    INSERT INTO sales_data (sales_id, state, branch, product_name, text, sentiment_result)
+    VALUES (%s, %s, %s, %s, %s, %s);
     """
     try:
+        count = 0
         for _, row in pandas_df.iterrows():
             # Prepare row data for insertion
+            print("this is the count", count)
+            print("Getting the ID", MAIN_RECORDS[count][0])
+            delete_query = f"""
+                DELETE FROM sales_data WHERE sales_id = {MAIN_RECORDS[count][0]};
+            """
+            cursor.execute(delete_query)
             cursor.execute(insert_query, (
+                MAIN_RECORDS[count][0],
                 row["state"],
                 row["branch"],
                 row["product_name"],
                 row["text"],
                 row["sentiment_result"]
             ))
+            count += 1
         conn.commit()
         print(f"Inserted {len(pandas_df)} rows into the database.")
     except Exception as e:

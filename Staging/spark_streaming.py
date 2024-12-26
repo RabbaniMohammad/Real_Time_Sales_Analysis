@@ -29,7 +29,7 @@ if __name__ == "__main__":
     # Define the schema for the JSON array elements
     sale_schema = StructType([
         StructField('customer_id', IntegerType(), True),
-        StructField('product_id', IntegerType(), True),
+        # StructField('product_id', IntegerType(), True),
         StructField('product_name', StringType(), True),
         StructField('quantity', IntegerType(), True),
         StructField('state', StringType(), True),

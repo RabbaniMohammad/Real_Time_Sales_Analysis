@@ -7,6 +7,10 @@ import json
 
 app = Flask(__name__)
 
+
+# You can delete after testing
+form_data_storage = [{'branch': 'Los Angeles', 'city': 'LA', 'payment_method': 'Cash', 'product_name': 'Speakers', 'quantity': '10', 'shopping_experience': 'Shopping at the Los Angeles branch was poor, especially the Speakers.', 'state': 'Illinois', 'total_amount': '20.48'}]
+
 # Database connection settings
 def get_db_connection():
     return psycopg2.connect(host="localhost", database="voting", user="postgres", password="postgres")
@@ -45,9 +49,11 @@ def delivery_report(err, msg):
 # Endpoint to update sales data
 @app.route('/buy', methods=['POST'])
 def buy_product():
+    global form_data_storage
     try:
         # Get form data
         data = request.form
+        form_data_storage.append(data)
         product_name = data['product_name']
         quantity = int(data['quantity'])
         state = data['state']
@@ -124,7 +130,7 @@ def buy_product():
         # Constructing customer and sales data
         voter_data = {
             "customer_id": customer_id,
-            "product_id": product_id,
+            # "product_id": product_id,
             "product_name": product_name,
             "quantity": quantity,
             "state": state,
@@ -143,6 +149,7 @@ def buy_product():
         producer = SerializingProducer({'bootstrap.servers':'localhost:9092'})
 
 
+        # retrieve the appropriate keys and make it a dict and then push
         producer.produce(
             "sales_info",
             key=str(customer_id),
@@ -155,6 +162,14 @@ def buy_product():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@app.route('/get_form_data', methods=['GET'])
+def get_form_data():
+    # Provide the stored form data
+    try:
+        return jsonify(form_data_storage[-1])
+    except Exception as e:
+        return {}
 
 # Serve the input page
 @app.route('/')

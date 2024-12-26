@@ -22,8 +22,13 @@ producer_conf = {
 producer = SerializingProducer(producer_conf)
 
 # Initialize an empty DataFrame
+# columns = [
+#     "customer_id", "product_id", "product_name", "quantity", "state", "city", "branch",
+#     "timestamp", "date", "time", "month", "year", "shopping_experience", "payment_method", "total_amount"
+# ]
+
 columns = [
-    "customer_id", "product_id", "product_name", "quantity", "state", "city", "branch",
+    "customer_id", "product_name", "quantity", "state", "city", "branch",
     "timestamp", "date", "time", "month", "year", "shopping_experience", "payment_method", "total_amount"
 ]
 sales_df = pd.DataFrame(columns=columns)

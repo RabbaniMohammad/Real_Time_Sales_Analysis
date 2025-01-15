@@ -77,6 +77,7 @@ dataframes = fetch_and_segregate_data()
 
 # Visualization functions
 def visualize_total_sales(df):
+    print("This is the df from the total sales", df)
     if not df.empty:
         chart = alt.Chart(df).mark_bar().encode(
             x="state:N",

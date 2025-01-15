@@ -2,14 +2,19 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType, TimestampType, DateType, DecimalType, ArrayType
 from pyspark.sql.functions import from_json, col, sum as _sum, lit, explode, collect_list, struct, window, round
+import json
 
+with open('metadata.json', 'r') as f:
+    metadata = json.load(f)['metadata']
+
+kafka = metadata['kafka']
 
 def createTopics(obj, partition_name, checkpoint_location):
         obj.withColumn("key", lit(partition_name)).selectExpr("key", "to_json(struct(*)) AS value") \
     .writeStream \
     .outputMode("complete") \
     .format("kafka") \
-    .option("kafka.bootstrap.servers", "localhost:9092") \
+    .option("kafka.bootstrap.servers", kafka['server']) \
     .option("topic", "aggregated_analysis_data") \
     .option("checkpointLocation", f"checkpoints/{checkpoint_location}") \
     .start()
@@ -49,7 +54,7 @@ if __name__ == "__main__":
     sales_df = (
         spark.readStream
             .format('kafka')
-            .option('kafka.bootstrap.servers', 'localhost:9092')
+            .option('kafka.bootstrap.servers', kafka['server'])
             .option('subscribe', 'processed_sales_info')
             .option('startingOffsets', 'earliest')
             .option('failOnDataLoss', 'false')
@@ -123,7 +128,7 @@ if __name__ == "__main__":
     createTopics(top_selling_products, "top_selling_products", "checkpoint_partition_6")
 
     # Write aggregated data to console for debugging
-    (customer_purchase_trends.writeStream 
+    (total_sales_per_location.writeStream 
         .outputMode("complete") 
         .format("console") 
         .start() 

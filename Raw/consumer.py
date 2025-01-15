@@ -1,31 +1,29 @@
-# Combines the topic and push it to the topic called processed_sales_info
-
 from confluent_kafka import Consumer, KafkaException, KafkaError, SerializingProducer
 import pandas as pd
 import json
 
+
+with open('metadata.json', 'r') as f:
+    metadata = json.load(f)['metadata']
+
+kafka = metadata['kafka']
+
 # Kafka Consumer Configuration
 consumer_conf = {
-    'bootstrap.servers': 'localhost:9092',
+    'bootstrap.servers': kafka['server'],
     'group.id': 'raw_sales_info',
-    'auto.offset.reset': 'earliest',  # Start consuming from the earliest offset if no committed offset is found
-    'enable.auto.commit': False       # Disable auto-commit to ensure manual offset management
+    'auto.offset.reset': 'earliest',  
+    'enable.auto.commit': False       
 }
 
 consumer = Consumer(consumer_conf)
-consumer.subscribe(['sales_info'])  # Topic to consume
+consumer.subscribe(['sales_info']) 
 
 # Kafka Producer Configuration
 producer_conf = {
-    'bootstrap.servers': 'localhost:9092',
+    'bootstrap.servers': kafka['server'],
 }
 producer = SerializingProducer(producer_conf)
-
-# Initialize an empty DataFrame
-# columns = [
-#     "customer_id", "product_id", "product_name", "quantity", "state", "city", "branch",
-#     "timestamp", "date", "time", "month", "year", "shopping_experience", "payment_method", "total_amount"
-# ]
 
 columns = [
     "customer_id", "product_name", "quantity", "state", "city", "branch",

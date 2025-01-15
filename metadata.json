@@ -1,0 +1,104 @@
+{
+    "metadata": {
+      "fact_table": {
+        "name": "sales_fact",
+        "columns": [
+          { "name": "id", "type": "bigint", "primary_key": true },
+          { "name": "product_id", "type": "bigint", "foreign_key": "product_dim.product_id" },
+          { "name": "quantity", "type": "bigint", "nullable": true },
+          { "name": "state_id", "type": "bigint", "foreign_key": "state_dim.state_id" },
+          { "name": "city_id", "type": "bigint", "foreign_key": "city_dim.city_id" },
+          { "name": "branch_id", "type": "bigint", "foreign_key": "branch_dim.branch_id" },
+          { "name": "shopping_experience", "type": "bigint", "foreign_key": "shopping_dim.experience_id" },
+          { "name": "payment_method", "type": "bigint", "foreign_key": "payment_method_dim.payment_id" },
+          { "name": "total_amount", "type": "decimal", "nullable": true },
+          { "name": "timestamp", "type": "timestamp", "nullable": true }
+        ]
+      },
+      "dimension_tables": [
+        {
+          "name": "product_dim",
+          "columns": [
+            { "name": "product_id", "type": "bigint", "primary_key": true },
+            { "name": "product_name", "type": "varchar", "nullable": true },
+            { "name": "timestamp", "type": "timestamp", "nullable": true },
+            { "name": "is_active", "type": "boolean", "nullable": true },
+            { "name": "master_product_id", "type": "bigint", "nullable": true },
+            { "name": "effective_date", "type": "timestamp", "nullable": true },
+            { "name": "expiry_date", "type": "timestamp", "nullable": true }
+          ]
+        },
+        {
+          "name": "state_dim",
+          "columns": [
+            { "name": "state_id", "type": "bigint", "primary_key": true },
+            { "name": "state_name", "type": "varchar", "nullable": true },
+            { "name": "state_code", "type": "bigint", "nullable": true },
+            { "name": "timestamp", "type": "timestamp", "nullable": true },
+            { "name": "is_active", "type": "boolean", "nullable": true },
+            { "name": "master_state_id", "type": "bigint", "nullable": true },
+            { "name": "effective_date", "type": "timestamp", "nullable": true },
+            { "name": "expiry_date", "type": "timestamp", "nullable": true }
+          ]
+        },
+        {
+          "name": "city_dim",
+          "columns": [
+            { "name": "city_id", "type": "bigint", "primary_key": true },
+            { "name": "city_name", "type": "varchar", "nullable": true },
+            { "name": "is_capital", "type": "boolean", "nullable": true },
+            { "name": "timestamp", "type": "timestamp", "nullable": true },
+            { "name": "is_active", "type": "boolean", "nullable": true },
+            { "name": "master_branch_id", "type": "bigint", "nullable": true },
+            { "name": "effective_date", "type": "timestamp", "nullable": true },
+            { "name": "expiry_date", "type": "timestamp", "nullable": true }
+          ]
+        },
+        {
+          "name": "branch_dim",
+          "columns": [
+            { "name": "branch_id", "type": "bigint", "primary_key": true },
+            { "name": "branch_name", "type": "varchar", "nullable": true },
+            { "name": "is_main", "type": "boolean", "nullable": true },
+            { "name": "timestamp", "type": "timestamp", "nullable": true },
+            { "name": "is_active", "type": "boolean", "nullable": true },
+            { "name": "master_branch_id", "type": "bigint", "nullable": true },
+            { "name": "effective_date", "type": "timestamp", "nullable": true },
+            { "name": "expiry_date", "type": "timestamp", "nullable": true }
+          ]
+        },
+        {
+          "name": "shopping_dim",
+          "columns": [
+            { "name": "experience_id", "type": "bigint", "primary_key": true },
+            { "name": "shopping_experience", "type": "varchar", "nullable": true },
+            { "name": "is_active", "type": "boolean", "nullable": true },
+            { "name": "master_shopping_id", "type": "bigint", "nullable": true },
+            { "name": "effective_date", "type": "timestamp", "nullable": true },
+            { "name": "expiry_date", "type": "timestamp", "nullable": true }
+          ]
+        },
+        {
+          "name": "payment_method_dim",
+          "columns": [
+            { "name": "payment_id", "type": "bigint", "primary_key": true },
+            { "name": "payment_method", "type": "varchar", "nullable": true },
+            { "name": "timestamp", "type": "timestamp", "nullable": true },
+            { "name": "is_active", "type": "boolean", "nullable": true },
+            { "name": "master_payment_id", "type": "bigint", "nullable": true },
+            { "name": "effective_date", "type": "timestamp", "nullable": true },
+            { "name": "expiry_date", "type": "timestamp", "nullable": true }
+          ]
+        }
+      ],
+      "database_info":{
+        "host":"localhost",
+        "dbname":"voting",
+        "user":"postgres",
+        "password":"postgres"
+      },
+      "kafka":{
+        "server":"localhost:9092"
+      }
+    }
+  }
